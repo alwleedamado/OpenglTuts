@@ -12,16 +12,21 @@ endif()
 project ("OpenglTutus")
 
 # Add source to this project's executable.
-add_executable (OpenglTutus "OpenglTutus.cpp" "OpenglTutus.h")
+add_executable (OpenglTutus "src/OpenglTutus.cpp" "src/OpenglTutus.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET OpenglTutus PROPERTY CXX_STANDARD 20)
 endif()
- if(CMAKE_BUILD_TYPE EQUAL "Release")
-	link_directories(lib/glew/lib/Release/x64)
-elseif(CMAKE_BUILD_TYPE EQUAL Debug)
-	link_directories(lib/glew/lib/Debug/x64)
+ if(${CMAKE_BUILD_TYPE} EQUAL Release)
+	target_link_directories(OpenglTutus PRIVATE lib/glew-2.1.0/lib/Release/x64)
+elseif(${CMAKE_BUILD_TYPE} EQUAL "Debug")
+	target_link_directories(OpenglTutus PRIVATE lib/glew-2.1.0/lib/Debug/x64)
 endif()
-# TODO: Add tests and install targets if needed.
+message(${CMAKE_BUILD_TYPE})
+add_subdirectory(lib/glfw)
+target_link_directories(OpenglTutus PRIVATE lib/glew-2.1.0/lib/Debug/x64)
+
 add_definitions(-DGLEW_STATIC)
-target_link_libraries(OpenglTutus "-lopengl32" glew32s)
+target_link_directories(OpenglTutus PRIVATE lib/glfw)
+target_link_libraries(OpenglTutus opengl32 glfw glew32sd)
+target_include_directories(OpenglTutus PRIVATE lib/glew-2.1.0/include lib/glfw/include)
